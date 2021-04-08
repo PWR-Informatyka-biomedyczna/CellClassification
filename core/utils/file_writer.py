@@ -8,7 +8,7 @@ from collections import deque
 class MetricWriter:
 
     def __init__(self, train_data_len, val_data_len):
-        self._device = torch.device('')
+        self._device = torch.device('cpu')
         self._metrics = {
             'train_loss': deque(),
             'train_acc': deque(),
@@ -28,8 +28,8 @@ class MetricWriter:
         self._val_cur_target = deque()
 
     def add_target_pred(self, pred, target, train=True, argmax_dim=1):
-        pred = torch.argmax(pred, dim=argmax_dim).squeeze(0)
-        target = torch.argmax(target, dim=argmax_dim).squeeze(0)
+        pred = torch.argmax(pred, dim=argmax_dim).to(self._device)
+        target = torch.argmax(target, dim=argmax_dim).to(self._device)
         if train:
             self._train_cur_pred.extend(pred)
             self._train_cur_target.extend(target)
@@ -58,7 +58,7 @@ class MetricWriter:
         self._val_cur_target.clear()
 
     def get_last_epoch_info(self):
-        return [(key, item[-1]) for key, item in self._metrics.items()]
+        return ''.join([f' {key}: {item[-1]:.5f}' for key, item in self._metrics.items()])
 
     @property
     def metrics(self):

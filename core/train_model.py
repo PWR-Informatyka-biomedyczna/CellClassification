@@ -1,14 +1,15 @@
 import torch
 
 
-from core.utils import MetricWriter, EarlyStopper
+from core.utils import MetricWriter, EarlyStopper, log_msg
 
 
-def train(model, max_epochs, criterion, optimizer, train_dataset, val_dataset=None, verbose=True):
+def train(model, max_epochs, criterion, optimizer, train_dataset, val_dataset, verbose=True):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f'Device: {device}')
-    print('Start training')
-
+    model.to(device)
+    log_msg(f'Device: {device}', verbose)
+    log_msg(f'Train samples: {len(train_dataset)}, validate samples: {len(val_dataset)}', verbose)
+    log_msg(f'Start training, loss: {criterion}, optimizer: {optimizer}', verbose)
     # setup metric writer
     metric_writer = MetricWriter(len(train_dataset), len(val_dataset))
     early_stopping = EarlyStopper(patience=7)
@@ -33,9 +34,11 @@ def train(model, max_epochs, criterion, optimizer, train_dataset, val_dataset=No
                 metric_writer.add_target_pred(pred, y, train=False)
                 early_stopping.stop(loss.item())
         metric_writer.calculate_metrics()
-        print(f'Epoch {i + 1} / {max_epochs}')
+        log_msg(f'Epoch {i + 1} / {max_epochs}, {metric_writer.get_last_epoch_info()}', verbose)
         torch.save(model.state_dict(), f'checkpoints/epoch{i + 1}checkpoint.pth')
+        log_msg(f'Saved model to checkpoints/epoch{i + 1}checkpoint.pth')
         if early_stopping:
+            log_msg('Early stopping', verbose)
             break
     return metric_writer.metrics
 
