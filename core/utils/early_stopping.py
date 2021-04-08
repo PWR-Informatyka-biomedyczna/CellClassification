@@ -8,6 +8,7 @@ class EarlyStopper:
         self._patience_step = 0
         self._delta = delta
         self._best_loss = np.Inf
+        self._early_stopping = False
 
     def stop(self, loss):
         loss = -loss
@@ -16,8 +17,10 @@ class EarlyStopper:
         elif loss < self._best_loss + self._delta:
             self._patience_step += 1
             if self._patience >= self._patience:
-                return True
+                self._early_stopping = True
         else:
             self._best_loss = loss
             self._patience_step = 0
-        return False
+
+    def __bool__(self):
+        return self._early_stopping

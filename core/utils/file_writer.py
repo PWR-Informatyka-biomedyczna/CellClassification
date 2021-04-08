@@ -59,3 +59,7 @@ class MetricWriter:
 
     def get_last_epoch_info(self):
         return [(key, item[-1]) for key, item in self._metrics.items()]
+
+    @property
+    def metrics(self):
+        return self._metrics
