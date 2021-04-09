@@ -5,9 +5,12 @@ from datetime import datetime
 from core.torchsummary import summary_string, summary
 
 
+DATA = datetime.now().strftime("%d.%m.%Y-%H.%M.%S")
+
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-filename = f'Training{datetime.now().strftime("%d.%m.%Y-%H.%M.%S")}.txt'
+filename = f'logs/Training{DATA}.txt'
 f = open(filename, 'w+')
 logging.basicConfig(filename=filename, level=logger.level)
 

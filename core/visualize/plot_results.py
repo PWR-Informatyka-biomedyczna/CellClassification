@@ -1,5 +1,7 @@
-from datetime import datetime
 import logging
+
+
+from core.utils import DATA
 
 
 import matplotlib.pyplot as plt
@@ -25,5 +27,5 @@ def plot_results(metrics, figsize=(10, 10), save=True):
             plot_metric(name, val, ax[i, j] if n_cols > 1 else ax[i])
     fig.tight_layout()
     if save:
-        fig.savefig(f'Metrics{datetime.now().strftime("%d.%m.%Y-%H.%M.%S")}.png')
+        fig.savefig(f'metrics/Metrics{DATA}.png')
     plt.show()
