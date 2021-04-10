@@ -63,3 +63,7 @@ class MetricWriter:
     @property
     def metrics(self):
         return self._metrics
+
+    @property
+    def last_val_loss(self):
+        return self._metrics['val_loss'][-1]
