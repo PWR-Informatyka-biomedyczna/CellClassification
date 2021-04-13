@@ -4,7 +4,6 @@ import os
 
 import torch
 from torch.utils.data import Dataset
-from torch.nn.functional import one_hot
 from PIL import Image
 
 
@@ -29,7 +28,7 @@ class Data(Dataset):
         class_map = dict()
         num_classes = len(classes)
         for i, c in enumerate(classes):
-            class_map[c] = one_hot(torch.tensor(i), num_classes)
+            class_map[c] = torch.tensor(i)
         return class_map
 
     def __len__(self):
@@ -42,5 +41,5 @@ class Data(Dataset):
     def __getitem__(self, item):
         path, label = self._data[item]
         img = self.__read_image(path)
-        return img, self._class_map[label].float()
+        return img, self._class_map[label].long()
 

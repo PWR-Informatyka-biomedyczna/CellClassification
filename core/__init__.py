@@ -1,8 +1,11 @@
 import os
+from datetime import datetime
 
+DATA = datetime.now().strftime("%d.%m.%Y-%H.%M.%S")
 
 if not os.path.exists('./checkpoints'):
-    os.mkdir('./checkpoints')
+    os.mkdir(f'./checkpoints')
+os.mkdir(f'./checkpoints/{DATA}')
 if not os.path.exists('./metrics'):
     os.mkdir('./metrics')
 if not os.path.exists('./logs'):

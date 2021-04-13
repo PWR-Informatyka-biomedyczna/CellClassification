@@ -3,9 +3,7 @@ from datetime import datetime
 
 
 from core.torchsummary import summary_string, summary
-
-
-DATA = datetime.now().strftime("%d.%m.%Y-%H.%M.%S")
+from core import DATA
 
 
 logger = logging.getLogger(__name__)
