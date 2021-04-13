@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader, SubsetRandomSampler
 from core.utils import MetricWriter, MetricWriterKFold, EarlyStopper, log_msg, DATA
 
 
-def train(model, max_epochs, criterion, optimizer, dataset, k_folds=5, batch_size=4, verbose=True):
+def train(model, max_epochs, criterion, optimizer, dataset, k_folds=5, batch_size=4, patience=7, verbose=True):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     log_msg(f'Device: {device}', verbose)
@@ -15,8 +15,9 @@ def train(model, max_epochs, criterion, optimizer, dataset, k_folds=5, batch_siz
     # setup metric writer
     splitter = KFold(k_folds, shuffle=True)
     metric_writer = MetricWriter()
-    early_stopping = EarlyStopper(patience=7)
+    early_stopping = EarlyStopper(patience=patience)
     for i in range(max_epochs):
+        best_idx = i + 1
         for j, (train_dataset, val_dataset) in enumerate(splitter.split(dataset)):
             train_sampler = SubsetRandomSampler(train_dataset)
             val_sampler = SubsetRandomSampler(val_dataset)
@@ -50,7 +51,8 @@ def train(model, max_epochs, criterion, optimizer, dataset, k_folds=5, batch_siz
         torch.save(model.state_dict(), f'checkpoints/{DATA}/epoch{i + 1}checkpoint.pth')
         log_msg(f'Saved model to checkpoints/epoch{i + 1}checkpoint.pth')
         if early_stopping:
+            best_idx -= patience
             log_msg('Early stopping', verbose)
             break
-    return metric_writer.metrics
+    return best_idx, metric_writer.metrics
 

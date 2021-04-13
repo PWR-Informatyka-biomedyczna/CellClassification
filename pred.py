@@ -15,14 +15,7 @@ def main():
     model = resnet18(True)
     net_fc = model.fc.in_features
     model.fc = torch.nn.Linear(net_fc, 3)
-    # 2. Setup train and validate dataset
-    data_train = Data(
-        path=r'C:\Users\konra\Desktop\data',
-        classes=['data_blue_single', 'data_blue_double', 'data_blue_triple'],
-        kind='train',
-        target_size=(80, 80),
-        transforms=default_transforms
-    )
+
     data_val = Data(
         path=r'C:\Users\konra\Desktop\data',
         classes=['data_blue_single', 'data_blue_double', 'data_blue_triple'],
@@ -32,20 +25,9 @@ def main():
     )
     # 4. Setup criterion and optimizer
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.00001)
-    # 5. Train model
-    best_model_epoch, metrics = train(
-        model=model,
-        max_epochs=15,
-        criterion=criterion,
-        optimizer=optimizer,
-        dataset=data_train,
-        verbose=True)
-    print(best_model_epoch)
-    # 6. Plot metrics
-    model.load_state_dict(torch.load(f'checkpoints/{DATA}/epoch{best_model_epoch}checkpoint.pth'))
+
+    model.load_state_dict(torch.load(f'checkpoints/{DATA}/epoch{best_model_epoch + 1}checkpoint.pth'))
     model.eval()
-    plot_results(metrics, save=True)
     predict(model, data_val, criterion)
 
 
