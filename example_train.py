@@ -36,7 +36,7 @@ def main():
     # 5. Train model
     metrics = train(
         model=model,
-        max_epochs=20,
+        max_epochs=10,
         criterion=criterion,
         optimizer=optimizer,
         dataset=data_train,

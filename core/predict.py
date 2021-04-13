@@ -4,6 +4,8 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, f1_score
 
+from core.utils import log_msg
+
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 CPU = torch.device('cpu')
@@ -25,5 +27,5 @@ def predict(model, dataset, criterion):
             targets.append(y.to(CPU))
     accuracy = accuracy_score(targets, preds)
     f1 = f1_score(targets, preds, average="weighted")
-    print(f'Accuracy: {accuracy:.f5}, f1_score: {f1:.f5}, mean_loss: {mean_loss}')
+    log_msg(f'Accuracy: {accuracy:.5f}, f1_score: {f1:.5f}, mean_loss: {mean_loss}')
 
