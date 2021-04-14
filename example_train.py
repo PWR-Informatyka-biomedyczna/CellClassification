@@ -215,4 +215,4 @@ def mobile():
     predict(model, data_val, criterion)
 
 if __name__ == '__main__':
-    mobile()
+    efficientnetv()
